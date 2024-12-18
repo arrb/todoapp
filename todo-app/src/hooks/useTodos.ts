@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { parseISO, compareAsc, isPast, format } from "date-fns";
 import axios from "axios";
@@ -5,7 +6,7 @@ import axios from "axios";
 import { Todo } from "../components/types";
 
 const API_URL = "https://b0f179aa-a791-47b5-a7ca-5585ba9e3642.mock.pstmn.io";
-const API_KEY = "PMAK-65a6d95a73d7f315b0b3ae13-28f9a3fada28cc91e0990b112478319641";
+const apiKey = process.env.REACT_APP_API_KEY;
 
 const sortTodos = (todos: Todo[]): Todo[] => {
     const overdue = todos
@@ -40,7 +41,7 @@ export const useTodos = () => {
             try {
                 setLoading(true);
                 const response = await axios.get<Todo[]>(`${API_URL}/get`, {
-                    headers: { "X-Api-Key": API_KEY },
+                    headers: { "X-Api-Key": apiKey },
                 });
                 const sortedTodos = sortTodos(response.data);
                 setTodos(sortedTodos);
@@ -59,7 +60,7 @@ export const useTodos = () => {
             await axios.patch(
                 `${API_URL}/patch/${id}`,
                 { isComplete: !isComplete },
-                { headers: { "X-Api-Key": API_KEY, "Content-Type": "application/json" } }
+                { headers: { "X-Api-Key": apiKey, "Content-Type": "application/json" } }
             );
             setTodos(prevTodos =>
                 sortTodos(
@@ -78,7 +79,7 @@ export const useTodos = () => {
             await axios.patch(
                 `${API_URL}/patch/${id}`,
                 { dueDate: newDate },
-                { headers: { "X-Api-Key": API_KEY, "Content-Type": "application/json" } }
+                { headers: { "X-Api-Key": apiKey, "Content-Type": "application/json" } }
             );
             setTodos(prevTodos =>
                 sortTodos(
